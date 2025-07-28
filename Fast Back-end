@@ -1,0 +1,63 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import Optional
+import psycopg2
+import os
+from dotenv import load_dotenv
+import numpy as np
+from langchain.embeddings import OpenAIEmbeddings
+
+load_dotenv()
+
+app = FastAPI()
+
+class Busca(BaseModel):
+    termo: str
+    tipo: Optional[str] = "textual"
+
+conn = psycopg2.connect(
+    host=os.getenv("DB_HOST", "localhost"),
+    port=os.getenv("DB_PORT", "5432"),
+    dbname=os.getenv("DB_NAME", "lattes"),
+    user=os.getenv("DB_USER", "postgres"),
+    password=os.getenv("DB_PASSWORD", "postgres")
+)
+cursor = conn.cursor()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
+embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+
+@app.get("/")
+def status():
+    return {"status": "API Lattes rodando"}
+
+@app.post("/busca")
+def busca_publicacoes(busca: Busca):
+    if busca.tipo == "textual":
+        cursor.execute("""
+            SELECT pc.titulo, pc.ano, p.nome
+            FROM producao_cientifica pc
+            JOIN pesquisadores p ON pc.pesquisador_id = p.id
+            WHERE LOWER(pc.titulo) LIKE %s
+            ORDER BY pc.ano DESC
+        """, (f"%{busca.termo.lower()}%",))
+        resultados = cursor.fetchall()
+        return [{"titulo": r[0], "ano": r[1], "pesquisador": r[2]} for r in resultados]
+
+    elif busca.tipo == "semantica":
+        try:
+            vetor_termo = embeddings.embed_query(busca.termo)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Erro ao gerar embedding: {str(e)}")
+        cursor.execute("""
+            SELECT pc.titulo, pc.ano, p.nome
+            FROM producao_cientifica pc
+            JOIN pesquisadores p ON pc.pesquisador_id = p.id
+            ORDER BY pc.vetor <-> %s
+            LIMIT 10
+        """, (vetor_termo,))
+        resultados = cursor.fetchall()
+        return [{"titulo": r[0], "ano": r[1], "pesquisador": r[2]} for r in resultados]
+
+    else:
+        raise HTTPException(status_code=400, detail="Tipo de busca inválido. Use 'textual' ou 'semantica'.")
