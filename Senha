@@ -1,0 +1,13 @@
+Nome: pg_lattes
+
+Tipo: PostgreSQL
+
+Servidor: localhost
+
+Porta: 5432
+
+Banco de dados: lattes
+
+Usuário: postgres
+
+Senha: postgres
