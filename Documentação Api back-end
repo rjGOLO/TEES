@@ -1,0 +1,103 @@
+Documentação da API Lattes (com Embeddings OpenAI)
+
+
+Visão Geral
+
+Esta API permite consultar produções científicas extraídas dos currículos Lattes, com suporte a buscas **textuais** (com `LIKE`) e **semânticas** usando embeddings reais da **OpenAI via LangChain**.
+
+Tecnologias utilizadas: FastAPI, PostgreSQL, pgvector, LangChain, OpenAI
+
+Requisitos
+
+Infraestrutura:
+
+PostgreSQL com extensões `pgvector` e `uuid-ossp` ativadas
+Banco de dados `lattes` com tabelas:
+
+  `pesquisadores (id, nome, lattes_id)`
+  `producao_cientifica (id, pesquisador_id, titulo, ano, vetor)`
+
+Dependências Python:
+
+`fastapi`, `uvicorn`, `psycopg2-binary`, `langchain`, `openai`, `numpy`, `python-dotenv`
+
+Instalar:
+
+bash
+pip install -r requirements.txt
+
+Arquivo `.env`
+
+env
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxx
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=lattes
+DB_USER=postgres
+DB_PASSWORD=postgres
+
+
+Endpoints Disponíveis
+
+`GET /`
+
+Descrição: Verifica se a API está funcionando.
+Resposta:
+
+json
+{
+  "status": "API Lattes rodando"
+}
+
+`POST /busca`
+
+Descrição: Realiza busca textual (com `LIKE`) ou semântica (com embeddings) nas produções científicas.
+
+Parâmetros (JSON):
+
+| Campo | Tipo     | Obrigatório | Descrição                             |
+| ----- | -------- | ----------- | ------------------------------------- |
+| termo | `string` | Sim         | Palavra ou frase para a busca         |
+| tipo  | `string` | Não         | `"textual"` (padrão) ou `"semantica"` |
+
+Exemplo de requisição:
+
+json
+{
+  "termo": "engenharia de software",
+  "tipo": "semantica"
+}
+
+
+Exemplo de resposta:
+
+json
+[
+  {
+    "titulo": "Análise de Dados com Apache Hop",
+    "ano": 2024,
+    "pesquisador": "Fulano da Silva"
+  },
+  {
+    "titulo": "ETL e Ciência de Dados",
+    "ano": 2023,
+    "pesquisador": "Beltrano Souza"
+  }
+]
+
+
+Códigos de erro:
+
+| Código | Descrição                        |
+| ------ | -------------------------------- |
+| 400    | Tipo de busca inválido           |
+| 500    | Erro ao gerar embedding (OpenAI) |
+
+
+Execução da API
+
+bash
+uvicorn main:app --reload
+
+
+
