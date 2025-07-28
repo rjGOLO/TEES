@@ -1,0 +1,69 @@
+
+"use client";
+
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+export default function Home() {
+  const [termo, setTermo] = useState("");
+  const [tipo, setTipo] = useState("textual");
+  const [resultados, setResultados] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  async function buscar() {
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:8000/busca", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ termo, tipo }),
+      });
+      const data = await res.json();
+      setResultados(data);
+    } catch (err) {
+      alert("Erro ao buscar: " + err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="p-4 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Consulta Currículos Lattes</h1>
+      <div className="flex gap-2 mb-4">
+        <Input
+          placeholder="Digite o termo de busca..."
+          value={termo}
+          onChange={(e) => setTermo(e.target.value)}
+        />
+        <select
+          className="border rounded px-2"
+          value={tipo}
+          onChange={(e) => setTipo(e.target.value)}
+        >
+          <option value="textual">Textual</option>
+          <option value="semantica">Semântica</option>
+        </select>
+        <Button onClick={buscar} disabled={loading}>
+          {loading ? "Buscando..." : "Buscar"}
+        </Button>
+      </div>
+
+      <div className="grid gap-4">
+        {resultados.length === 0 && !loading && <p>Nenhum resultado encontrado.</p>}
+        {resultados.map((r, idx) => (
+          <Card key={idx} className="shadow">
+            <CardContent className="p-4">
+              <p className="font-semibold">{r.titulo}</p>
+              <p className="text-sm text-muted">{r.ano} - {r.pesquisador}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
