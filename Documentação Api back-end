@@ -1,6 +1,5 @@
 Documentação da API Lattes (com Embeddings OpenAI)
 
-
 Visão Geral
 
 Esta API permite consultar produções científicas extraídas dos currículos Lattes, com suporte a buscas **textuais** (com `LIKE`) e **semânticas** usando embeddings reais da **OpenAI via LangChain**.
