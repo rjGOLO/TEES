@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CURRICULO-VITAE>
+  <DADOS-GERAIS NOME-COMPLETO="Fulano da Silva" NOME-EM-CITACOES-BIBLIOGRAFICAS="SILVA, F." NUMERO-IDENTIFICADOR="1234567890123456" />
+  
+  <PRODUCAO-BIBLIOGRAFICA>
+    <ARTIGOS-PUBLICADOS>
+      <ARTIGO-PUBLICADO>
+        <DADOS-BASICOS-DO-ARTIGO
+          TITULO-DO-ARTIGO="Análise de Dados com Apache Hop"
+          ANO="2024"
+          IDIOMA="Português" />
+        <DETALHAMENTO-DO-ARTIGO
+          TITULO-DO-PERIODICO-OU-REVISTA="Revista Brasileira de Engenharia de Software"
+          VOLUME="10"
+          PAGINA-INICIAL="12"
+          PAGINA-FINAL="20" />
+        <AUTORES>
+          <AUTOR NOME-COMPLETO-DO-AUTOR="Fulano da Silva" ORDEM-DE-AUTORIA="1" />
+          <AUTOR NOME-COMPLETO-DO-AUTOR="Beltrano Santos" ORDEM-DE-AUTORIA="2" />
+        </AUTORES>
+      </ARTIGO-PUBLICADO>
+    </ARTIGOS-PUBLICADOS>
+
+    <TRABALHOS-EM-EVENTOS>
+      <TRABALHO-EM-EVENTOS>
+        <DADOS-BASICOS-DO-TRABALHO
+          TITULO-DO-TRABALHO="Uso de ETL no Ensino de Engenharia de Software"
+          ANO="2023"
+          NATUREZA="Resumo Expandido" />
+        <DETALHAMENTO-DO-TRABALHO
+          NOME-DO-EVENTO="Congresso de Engenharia e Computação"
+          CIDADE-DO-EVENTO="Salvador"
+          TIPO-DE-PARTICIPACAO="Autor" />
+        <AUTORES>
+          <AUTOR NOME-COMPLETO-DO-AUTOR="Fulano da Silva" ORDEM-DE-AUTORIA="1" />
+        </AUTORES>
+      </TRABALHO-EM-EVENTOS>
+    </TRABALHOS-EM-EVENTOS>
+
+    <LIVROS-E-CAPITULOS>
+      <LIVROS-PUBLICADOS-OU-ORGANIZADOS>
+        <LIVRO-PUBLICADO-OU-ORGANIZADO>
+          <DADOS-BASICOS-DO-LIVRO
+            TITULO-DO-LIVRO="Inteligência Artificial para Iniciantes"
+            ANO="2022"
+            IDIOMA="Português" />
+          <DETALHAMENTO-DO-LIVRO
+            NOME-DA-EDITORA="Editora Acadêmica"
+            CIDADE-DA-EDITORA="São Paulo" />
+          <AUTORES>
+            <AUTOR NOME-COMPLETO-DO-AUTOR="Fulano da Silva" ORDEM-DE-AUTORIA="1" />
+          </AUTORES>
+        </LIVRO-PUBLICADO-OU-ORGANIZADO>
+      </LIVROS-PUBLICADOS-OU-ORGANIZADOS>
+    </LIVROS-E-CAPITULOS>
+  </PRODUCAO-BIBLIOGRAFICA>
+</CURRICULO-VITAE>
