@@ -1,0 +1,59 @@
+Nome: pg_lattes
+
+Tipo: PostgreSQL
+
+Servidor: localhost
+
+Porta: 5432
+
+Banco de dados: lattes
+
+Usuário: postgres
+
+Senha: postgres
+
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS vector;
+
+
+CREATE TABLE IF NOT EXISTS pesquisadores (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  nome VARCHAR(200) NOT NULL,
+  lattes_id VARCHAR(16) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS producao_cientifica (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  pesquisador_id UUID REFERENCES pesquisadores(id) ON DELETE CASCADE,
+  tipo TEXT NOT NULL, 
+  titulo TEXT NOT NULL,
+  ano INTEGER,
+  fonte TEXT, 
+  cidade TEXT,
+  idioma TEXT,
+  natureza TEXT,
+  paginas TEXT,
+  vetor VECTOR(768) 
+);
+
+CREATE TABLE IF NOT EXISTS autores (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  producao_id UUID REFERENCES producao_cientifica(id) ON DELETE CASCADE,
+  nome_autor VARCHAR(200),
+  ordem INTEGER
+);
+
+CREATE VIEW IF NOT EXISTS vw_producoes_com_pesquisador AS
+SELECT
+  p.nome AS pesquisador,
+  pc.tipo,
+  pc.titulo,
+  pc.ano,
+  pc.fonte,
+  pc.cidade,
+  pc.idioma,
+  pc.natureza
+FROM producao_cientifica pc
+JOIN pesquisadores p ON p.id = pc.pesquisador_id;
